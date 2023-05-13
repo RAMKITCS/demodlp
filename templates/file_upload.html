@@ -1,0 +1,141 @@
+{% extends 'base.html' %} {% block content %}
+<style>
+  @font-face {
+    font-family: "digital1";
+    src: url("/static/fonts/digital.ttf");
+  }
+
+  .counter-timer {
+    font-family: digital1;
+    color: red;
+    text-shadow: 0px 0px 3px indianred;
+    font-size: 3em;
+  }
+</style>
+
+<div class="col-4 offset-4">
+  <div class="">
+    <h4 class="text-center">Google Data Loss Prevention API Demo</h4>
+  </div>
+  {% if not status %}
+  <div class="card p-4">
+    <div class="mb-3">
+      <form action="{{ url_for('upload') }}"  method="post"  enctype="multipart/form-data" >
+        <label for="file_upload" class="form-label">Upload File</label>
+        <input
+          class="form-control form-control-sm mb-4"
+          id="file_upload"
+          name="file"
+          type="file"
+          accept="application/pdf"
+          required
+        />
+        <input
+          class="form-control form-control-sm mb-4 mw-50"
+          id="id"
+          name="doc_name"
+          type="text"
+          placeholder="Enter Document Name..."
+          required
+        />
+        <div class="text-center">
+          <input type="submit" class="btn btn-primary btn-sm" name="upload" value="UPLOAD" />
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  {% endif %} {% if status==2 %}
+  <div class="card card-body text-center mx-auto">
+    <div class="">
+      <h5 class="text-success" style="text-align: center">
+        File Uploaded Successfully
+      </h5>
+      <h5 class="text-success" style="text-align: center">
+        DLP Process is running in the background.
+      </h5>
+      <br />
+      <h5 class="text-success" style="text-align: center">
+        This page will be automatically redirected to the Dashboard for tracking
+        the progress
+      </h5>
+      <div id="counter" class="counter-timer">10</div>
+      <div id="filedisplay" class="mb-1">
+      </div>
+      <script>
+        console.log(status);
+        setInterval(function () {
+          var div = document.querySelector("#counter");
+          var count = div.textContent * 1 - 1;
+          div.textContent = count;
+          if (count <= 0) {
+            window.location.replace("/index");
+          }
+        }, 1000);
+      </script>
+    </div>
+  </div>
+  {% endif %}   
+  
+  {% if status==1 %}    
+        <div class="card card-body text-center mx-auto">
+            <table class="table table-striped">
+            <thead></thead>
+            <tbody>
+                <tr class="table-info">
+                <th class="text-lg-left" scope="row">File Name</th>
+                <td>{{fname}}</td>
+                </tr>
+                <tr class="table-info">
+                <th class="text-lg-left" scope="row">Status</th>
+                <td>Upload Successfull</td>
+                </tr>
+            </tbody>
+            </table>
+            <br />
+            <br />
+            <br />
+            <div class="row">
+            <div class="col-sm-6">
+                <div class="card">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+                    
+                <div class="card-body">
+                    <h5 class="card-title"></h5>
+                    <p class="card-text">
+                    Delete the Uploaded File and Stop Processing
+                    </p>
+                    <form action="{{ url_for('upload') }}"  method="get"  enctype="text/plain" >        
+                      <div style="display:none">  
+
+                        <label for="filename">File Name</label>  <input type="text"  name="fname"     value="{{fname}}">
+                        <label for="doc_name">Doc Name</label>   <input type="text"  name="doc_name"  value="{{doc_name}}">
+
+                    </div>
+                    <button class="btn btn-danger" type="submit"  >DELETE</button>
+                    </form>
+                </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"></h5>
+                    <p class="card-text">Proceed with Processing the Uploaded File</p>
+                    <form action="{{ url_for('upload') }}"  method="post" >
+                            <div style="display:none">  
+
+                                <label for="filename">File Name</label>  <input type="text"  name="fname"     value="{{fname}}">
+                                <label for="doc_name">Doc Name</label>   <input type="text"  name="doc_name"  value="{{doc_name}}">
+
+                            </div>
+                     <button class="btn btn-success" type="submit">PROCESS</button>
+                    </form>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>   
+  {% endif %}
+</div>
+{% endblock %}
